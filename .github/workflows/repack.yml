@@ -1,0 +1,97 @@
+# .github/workflows/repackage-curseforge.yml
+name: Repackage CurseForge AppImage
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  check-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Download and extract CurseForge
+      id: download
+      run: |
+        # Download the zip file
+        wget -O curseforge-latest-linux.zip "https://curseforge.overwolf.com/downloads/curseforge-latest-linux.zip"
+        
+        # Extract the zip file
+        unzip curseforge-latest-linux.zip
+        
+        # Find the AppImage file
+        APPIMAGE_FILE=$(find . -name "CurseForge-*.AppImage" -type f | head -n 1)
+        
+        if [ -z "$APPIMAGE_FILE" ]; then
+          echo "Error: No AppImage file found"
+          exit 1
+        fi
+        
+        echo "Found AppImage: $APPIMAGE_FILE"
+        
+        # Extract version from filename
+        # Format: CurseForge-1.285.2-27841.AppImage
+        FILENAME=$(basename "$APPIMAGE_FILE")
+        VERSION=$(echo "$FILENAME" | sed 's/CurseForge-\(.*\)\.AppImage/\1/')
+        
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "filename=$FILENAME" >> $GITHUB_OUTPUT
+        echo "filepath=$APPIMAGE_FILE" >> $GITHUB_OUTPUT
+        
+        # Make AppImage executable
+        chmod +x "$APPIMAGE_FILE"
+    
+    - name: Check if version already exists
+      id: check_version
+      run: |
+        VERSION="${{ steps.download.outputs.version }}"
+        
+        # Check if a release with this version already exists
+        if gh release view "v$VERSION" >/dev/null 2>&1; then
+          echo "Release v$VERSION already exists"
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "Release v$VERSION does not exist"
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Create release
+      if: steps.check_version.outputs.exists == 'false'
+      run: |
+        VERSION="${{ steps.download.outputs.version }}"
+        FILENAME="${{ steps.download.outputs.filename }}"
+        FILEPATH="${{ steps.download.outputs.filepath }}"
+        
+        # Create release
+        RELEASE_NOTES="Repackaged CurseForge AppImage v$VERSION"
+
+        gh release create "v$VERSION" \
+          --title "CurseForge v$VERSION" \
+          --notes "$RELEASE_NOTES" \
+          "$FILEPATH#$FILENAME"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Update latest release info
+      if: steps.check_version.outputs.exists == 'false'
+      run: |
+        VERSION="${{ steps.download.outputs.version }}"
+        echo "Latest version: $VERSION" > latest_version.txt
+        echo "Released on: $(date)" >> latest_version.txt
+        
+        # Commit the version file (optional, for tracking)
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add latest_version.txt
+        git diff --staged --quiet || git commit -m "Update to version $VERSION"
+        git push || true  # Don't fail if nothing to push
