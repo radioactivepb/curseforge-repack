@@ -51,7 +51,3 @@ The original CurseForge client can be found at:
 ## License
 
 This repository only repackages the official CurseForge client. All rights belong to Overwolf/CurseForge. This is provided for convenience only.
-
-## Manual Trigger
-
-You can manually trigger the workflow by going to the Actions tab and running the "Repackage CurseForge AppImage" workflow.
