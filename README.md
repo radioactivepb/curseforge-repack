@@ -26,9 +26,21 @@ The GitHub Action runs periodically and:
 
 ## Usage
 
+### Direct Download
 1. Download the AppImage from the releases page
 2. Make it executable: `chmod +x CurseForge-*.AppImage`
 3. Run it: `./CurseForge-*.AppImage`
+
+### GearLever Integration
+I did this mainly so I could use GearLever's update functionality with the CurseForge AppImage.
+Hopefully others can get some use out of it too.
+
+With this repo, you can now set a GitHub update source for CurseForge in GearLever to this link:
+```
+https://github.com/radioactivepb/curseforge-repack/releases/download/*/CurseForge-*.AppImage
+```
+
+This allows GearLever to automatically detect and update to new versions of CurseForge as they're released.
 
 ## Original Source
 
@@ -39,3 +51,7 @@ The original CurseForge client can be found at:
 ## License
 
 This repository only repackages the official CurseForge client. All rights belong to Overwolf/CurseForge. This is provided for convenience only.
+
+## Manual Trigger
+
+You can manually trigger the workflow by going to the Actions tab and running the "Repackage CurseForge AppImage" workflow.
