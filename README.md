@@ -16,7 +16,7 @@ Go to the [Releases](../../releases) page to download the latest CurseForge AppI
 
 ## How it works
 
-The GitHub Action runs every 6 hours and:
+The GitHub Action runs periodically and:
 
 1. Downloads the zip file from `https://curseforge.overwolf.com/downloads/curseforge-latest-linux.zip`
 2. Extracts the AppImage (format: `CurseForge-X.X.X-XXXXX.AppImage`)
