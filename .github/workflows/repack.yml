@@ -3,7 +3,7 @@ name: Repackage CurseForge AppImage
 
 on:
   schedule:
-    - cron: '0 12 * * *'
+    - cron: '0 */12 * * *'
   workflow_dispatch:
   push:
     branches: [ main ]
