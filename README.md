@@ -14,28 +14,14 @@ This repository automatically repackages the CurseForge AppImage from the offici
 
 Go to the [Releases](../../releases) page to download the latest CurseForge AppImage.
 
-## How it works
-
-The GitHub Action runs periodically and:
-
-1. Downloads the zip file from `https://curseforge.overwolf.com/downloads/curseforge-latest-linux.zip`
-2. Extracts the AppImage (format: `CurseForge-X.X.X-XXXXX.AppImage`)
-3. Parses the version number from the filename
-4. Checks if a release for this version already exists
-5. If it's a new version, creates a new GitHub release with the AppImage
-
-## Usage
-
-### Direct Download
-1. Download the AppImage from the releases page
-2. Make it executable: `chmod +x CurseForge-*.AppImage`
-3. Run it: `./CurseForge-*.AppImage`
+## Why Does Repo This Exist?
 
 ### GearLever Integration
 I did this mainly so I could use GearLever's update functionality with the CurseForge AppImage.
-Hopefully others can get some use out of it too.
+Since CurseForge only offers a zipped version with the AppImage inside, I can't use the automatic update functionality of GearLever.
 
 With this repo, you can now set a GitHub update source for CurseForge in GearLever to this link:
+
 ```
 https://github.com/radioactivepb/curseforge-repack/releases/download/*/CurseForge-*.AppImage
 ```
