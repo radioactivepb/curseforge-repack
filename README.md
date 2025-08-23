@@ -23,7 +23,7 @@ Since CurseForge only offers a zipped version with the AppImage inside, I can't 
 With this repo, you can now set a GitHub update source for CurseForge in GearLever to this link:
 
 ```
-https://github.com/radioactivepb/curseforge-repack/releases/download/*/CurseForge-*.AppImage
+https://github.com/radioactivepb/curseforge-appimage/releases/download/*/CurseForge-*.AppImage
 ```
 
 This allows GearLever to automatically detect and update to new versions of CurseForge as they're released.
